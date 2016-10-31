@@ -10,6 +10,16 @@
 #define FALSE  -1
 #define TRUE   0
 
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include<sys/types.h>
+#include<sys/stat.h>
+#include<fcntl.h>
+#include<termios.h>
+#include<errno.h>
+#include<string.h>
+
 int UART_Open(int fd,char* port);
 void UART_Close(int fd);
 int UART_Set(int fd,int speed,int flow_ctrl,int databits,int stopbits,int parity);
