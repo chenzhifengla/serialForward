@@ -7,6 +7,8 @@
 
 #endif //SERIALFORWARD_PTY_H
 
+#include "pubHeader.h"
+
 int PTY_Open(int fd, char* port);
 void PTY_Close(int fd);
 int PTY_Recv(int fd, char* rcv_buf, int data_len);

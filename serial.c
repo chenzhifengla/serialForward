@@ -164,7 +164,7 @@ int UART_Recv(int fd, char *rcv_buf,int data_len)
     FD_SET(fd,&fs_read);
 
     time.tv_sec = 0;
-    time.tv_usec = 100000;
+    time.tv_usec = 0;
 
     fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);
     if(fs_sel){

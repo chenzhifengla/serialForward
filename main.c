@@ -18,7 +18,7 @@ void quit(int signum){
 
 int main(){
     char* serialName = "/dev/ttyS0";
-    char* ptyName = "/dev/pts/2";
+    char* ptyName = "/dev/pts/0";
 
     int ret = FALSE;
     char buf[MAXSIZE];
@@ -50,15 +50,21 @@ int main(){
         ret = UART_Recv(fd_serial, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            printf("\"%s\" --> \"%s\" : %s\n", buf);
+            printf("\"%s\" ---->> \"%s\" : %s\n", serialName, ptyName, buf);
             PTY_Send(fd_pty, buf, ret);
+        }
+        else {
+            //printf("\"%s\" -->> \"%s\"\n", serialName, ptyName);
         }
 
         ret = PTY_Recv(fd_pty, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            printf("\"%s\" --> \"%s\" : %s\n", buf);
+            printf("\"%s\" <<---- \"%s\" : %s\n", serialName, ptyName, buf);
             UART_Send(fd_serial, buf, ret);
+        }
+        else{
+            //printf("\"%s\" --> \"%s\"\n", ptyName, serialName);
         }
     }
 
