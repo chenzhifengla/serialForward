@@ -3,22 +3,23 @@
 //
 
 #include "serial.h"
-#include "pty.h"
 #include <signal.h>
-#define MAXSIZE 512
+
 int fd_serial = FALSE, fd_pty = FALSE;
+char* serialName = "/dev/ttyS0";
+char* ptyName = "/dev/pts/0";
 
 void quit(int signum){
-    //printf("catch signal SIGINT\n");
+    printf("catch signal SIGINT\n");
     UART_Close(fd_serial);
-    //printf("\nclose serial\n");
-    PTY_Close(fd_pty);
+    printf("关闭 \"%s\"\n", serialName);
+    UART_Close(fd_pty);
+    printf("关闭 \"%s\"\n", ptyName);
     exit(0);
 }
 
 int main(){
-    char* serialName = "/dev/ttyS0";
-    char* ptyName = "/dev/pts/0";
+
 
     int ret = FALSE;
     char buf[MAXSIZE];
@@ -30,14 +31,20 @@ int main(){
         printf("open \"%s\" error\n", serialName);
         return 1;
     }
+    else {
+        printf("打开 \"%s\"\n", serialName);
+    }
     ret = UART_Init(fd_serial,9600,0,8,1,'N');
     if (FALSE == ret){
         printf("Set Port \"%s\" Error\n", serialName);
         return 1;
     }
+    else{
+        printf("打开 \"%s\"\n", ptyName);
+    }
 
     //pty open and init
-    fd_pty = PTY_Open(fd_pty, ptyName);
+    fd_pty = UART_Open(fd_pty, ptyName);
     if (FALSE == fd_pty){
         printf("open \"%s\" error\n", ptyName);
         return 1;
@@ -50,17 +57,19 @@ int main(){
         ret = UART_Recv(fd_serial, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            printf("\"%s\" ---->> \"%s\" : %s\n", serialName, ptyName, buf);
-            PTY_Send(fd_pty, buf, ret);
+            //printf("\"%s\" ---->> \"%s\" : %s\n", serialName, ptyName, buf);
+            printf("外部设备 ---->> 虚拟机 : %s\n", buf);
+            UART_Send(fd_pty, buf, ret);
         }
         else {
             //printf("\"%s\" -->> \"%s\"\n", serialName, ptyName);
         }
 
-        ret = PTY_Recv(fd_pty, buf, MAXSIZE);
+        ret = UART_Recv(fd_pty, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            printf("\"%s\" <<---- \"%s\" : %s\n", serialName, ptyName, buf);
+            //printf("\"%s\" <<---- \"%s\" : %s\n", serialName, ptyName, buf);
+            printf("外部设备 <<---- 虚拟机 : %s\n", buf);
             UART_Send(fd_serial, buf, ret);
         }
         else{

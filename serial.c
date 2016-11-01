@@ -24,6 +24,7 @@ int UART_Open(int fd,char* port)
     }
     return fd;
 }
+
 void UART_Close(int fd)
 {
     close(fd);
@@ -151,11 +152,9 @@ int UART_Init(int fd, int speed,int flow_ctrlint ,int databits,int stopbits,char
 }
 
 
-
-
 int UART_Recv(int fd, char *rcv_buf,int data_len)
 {
-    int len,fs_sel;
+    int len = 0,fs_sel;
     fd_set fs_read;
 
     struct timeval time;
@@ -163,16 +162,26 @@ int UART_Recv(int fd, char *rcv_buf,int data_len)
     FD_ZERO(&fs_read);
     FD_SET(fd,&fs_read);
 
-    time.tv_sec = 0;
-    time.tv_usec = 0;
+    time.tv_sec = WAIT_SECOND;
+    time.tv_usec = WAIT_USECOND;
 
-    fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);
+    fs_sel = select(fd + 1, &fs_read, NULL, NULL, &time);
+    if (!fs_sel) return (FALSE);
+
+    while (fs_sel){
+        len += read(fd, rcv_buf + len, data_len - len);
+        if (len > MAX_LINE_LEN || rcv_buf[len - 1] == '\n') return len;
+        fs_sel = select(fd + 1, &fs_read, NULL, NULL, &time);
+    }
+    return len;
+
+    /*fs_sel = select(fd+1,&fs_read,NULL,NULL,&time);
     if(fs_sel){
         len = read(fd,rcv_buf,data_len);
         return len;
     } else {
         return FALSE;
-    }
+    }*/
 }
 
 
