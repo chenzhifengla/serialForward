@@ -7,7 +7,7 @@
 
 int fd_serial = FALSE, fd_pty = FALSE;
 char* serialName = "/dev/ttyS0";
-char* ptyName = "/dev/pts/0";
+char* ptyName = "/dev/pts/1";
 
 void quit(int signum){
     printf("catch signal SIGINT\n");
@@ -57,23 +57,23 @@ int main(){
         ret = UART_Recv(fd_serial, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            //printf("\"%s\" ---->> \"%s\" : %s\n", serialName, ptyName, buf);
+//            printf("\"%s\" ---->> \"%s\" : %s\n", serialName, ptyName, buf);
             printf("外部设备 ---->> 虚拟机 : %s\n", buf);
             UART_Send(fd_pty, buf, ret);
         }
         else {
-            //printf("\"%s\" -->> \"%s\"\n", serialName, ptyName);
+//            printf("\"%s\" -->> \"%s\"\n", serialName, ptyName);
         }
 
         ret = UART_Recv(fd_pty, buf, MAXSIZE);
         if (ret > 0){
             buf[ret] = '\0';
-            //printf("\"%s\" <<---- \"%s\" : %s\n", serialName, ptyName, buf);
+//            printf("\"%s\" <<---- \"%s\" : %s\n", serialName, ptyName, buf);
             printf("外部设备 <<---- 虚拟机 : %s\n", buf);
             UART_Send(fd_serial, buf, ret);
         }
         else{
-            //printf("\"%s\" --> \"%s\"\n", ptyName, serialName);
+//            printf("\"%s\" --> \"%s\"\n", ptyName, serialName);
         }
     }
 
