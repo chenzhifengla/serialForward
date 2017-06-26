@@ -84,7 +84,7 @@ int main(int argc, char** argv){
     //loop
     while(1){
         strcpy(buffer, "<event name=\"");
-        int eventName = getEventName();
+        char* eventName = getEventName();
         strcat(buffer, eventName);
         strcat(buffer, "\" value=\"x = ");
         sprintf(valueNum, "%d", getValueNum());
