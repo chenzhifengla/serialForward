@@ -24,8 +24,9 @@ int main(int argc, char** argv){
     if (argc == 3) {
         strcpy(serialName, argv[1]);
         strcpy(ptyName, argv[2]);
-    }
-    else if (argc != 1) {
+    } else if (argc == 2) {
+        strcpy(serialName, argv[1]);
+    } else if (argc != 1) {
         printf("Usage: ./serialForward serialName ptyName\n");
         return 1;
     }
