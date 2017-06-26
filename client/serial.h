@@ -9,7 +9,7 @@
 
 #define FALSE  -1
 #define TRUE   0
-#define MAXSIZE 512
+#define MAXSIZE 1024
 #define MAX_LINE_LEN 20
 #define WAIT_SECOND 0
 #define WAIT_USECOND 100000

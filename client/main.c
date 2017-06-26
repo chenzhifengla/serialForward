@@ -21,27 +21,30 @@ void quit(int signum){
     exit(0);
 }
 
-int getEventNum() {
-    static int eventNum = -1;
-    static double p = 0.2;  // 异常的概率
+char* getEventName() {
+    static double p = 0.7;  // increase事件的概率
+    if (rand() > RAND_MAX * p) return "decrease";
+    else return "increase";
 
-    eventNum++;
-    if (rand() > RAND_MAX * (1 - p)) {
-//        return rand() % 10 + 1;  // 返回一个异常的事件编号
-        return -1;
-    }
-    else return eventNum % 5 + 1;
+//    eventNum++;
+//    if (rand() > RAND_MAX * (1 - p)) {
+////        return rand() % 10 + 1;  // 返回一个异常的事件编号
+//        return -1;
+//    }
+//    else return eventNum % 5 + 1;
 }
 
 int getValueNum() {
-    static int valueNum = -1;
-    static double p = 0.2;
+    return rand() % 60;
 
-    valueNum++;
-    if (rand() > RAND_MAX * (1 - p)) {
-        return rand();  // 模拟事件篡改
-    }
-    else return valueNum % 100 + 1;
+//    static int valueNum = -1;
+//    static double p = 0.2;
+//
+//    valueNum++;
+//    if (rand() > RAND_MAX * (1 - p)) {
+//        return rand();  // 模拟事件篡改
+//    }
+//    else return valueNum % 100 + 1;
 }
 
 int main(int argc, char** argv){
@@ -80,15 +83,14 @@ int main(int argc, char** argv){
 
     //loop
     while(1){
-        strcpy(buffer, "<event name=\"event");
-        int eventNumInt = getEventNum();
-        sprintf(eventNum, "%d", eventNumInt);
-        strcat(buffer, eventNum);
+        strcpy(buffer, "<event name=\"");
+        int eventName = getEventName();
+        strcat(buffer, eventName);
         strcat(buffer, "\" value=\"x = ");
         sprintf(valueNum, "%d", getValueNum());
         strcat(buffer, valueNum);
         strcat(buffer, "\"/>");
-        if (eventNumInt < 0) continue;  // 模拟事件丢失
+//        if (eventNumInt < 0) continue;  // 模拟事件丢失
 
         if (UART_Send(fd_serial, buffer, strlen(buffer)) < 0) {
             printf("Send message %s failed!", buffer);
