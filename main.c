@@ -4,10 +4,11 @@
 
 #include "serial.h"
 #include <signal.h>
+#include <string.h>
 
 int fd_serial = FALSE, fd_pty = FALSE;
-char* serialName = "/dev/ttyS0";
-char* ptyName = "/dev/pts/1";
+char serialName[20] = "/dev/ttyS0";
+char ptyName[20] = "/dev/pts/1";
 
 void quit(int signum){
     printf("catch signal SIGINT\n");
@@ -18,8 +19,16 @@ void quit(int signum){
     exit(0);
 }
 
-int main(){
+int main(int argc, char** argv){
 
+    if (argc == 3) {
+        strcpy(serialName, argv[1]);
+        strcpy(ptyName, argv[2]);
+    }
+    else if (argc != 1) {
+        printf("Usage: ./serialForward serialName ptyName\n");
+        return 1;
+    }
 
     int ret = FALSE;
     char buf[MAXSIZE];

@@ -12,7 +12,7 @@ char eventNum[20];
 char valueNum[20];
 
 int fd_serial = FALSE;
-char* serialName = "/dev/ttyS0";
+char serialName[20] = "/dev/ttyS0";
 
 void quit(int signum){
     printf("catch signal SIGINT\n");
@@ -44,7 +44,15 @@ int getValueNum() {
     else return valueNum % 100 + 1;
 }
 
-int main(){
+int main(int argc, char** argv){
+
+    if (argc == 2) {
+        strcpy(serialName, argv[1]);
+    }
+    else if (argc != 1) {
+        printf("Usage: ./serialClient serialName\n");
+        return 1;
+    }
 
     int ret = FALSE;
     char buf[MAXSIZE];
