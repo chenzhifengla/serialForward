@@ -20,14 +20,16 @@ using std::string;
 using std::vector;
 
 bool SerialClient::init() {
-    if (!setPort()) {
-        cerr << "set " << port << " failed!" << endl;
-        return false;
-    }
     if (!openPort()) {
         cerr << "open " << port << " failed!" << endl;
         return false;
     }
+    cout << "open " << port << " success!" << endl;
+    if (!setPort()) {
+        cerr << "set " << port << " failed!" << endl;
+        return false;
+    }
+    cout << "set " << port << "success!" << endl;
     return true;
 }
 
