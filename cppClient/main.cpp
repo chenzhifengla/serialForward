@@ -31,7 +31,7 @@ int main(int argc, char** argv) {
     while (1) {
         ostringstream oss;
         oss << "<event name=\"" << getEventName() << "\" value=\"x = " << getValueNum() << "\"/>";
-        if (!serialClient.sendMessage("<event name=\"increase\" value=\"x = 98\"/>")) {
+        if (!serialClient.sendMessage(oss.str())) {
             cerr << "Send message " << oss.str() << "failed!" << endl;
             break;
         }
