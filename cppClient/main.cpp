@@ -35,7 +35,6 @@ int main(int argc, char** argv) {
             cerr << "Send message " << oss.str() << "failed!" << endl;
             break;
         }
-        cout << oss.str() << endl;
         sleep(1);
     }
 

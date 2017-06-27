@@ -165,9 +165,15 @@ string SerialClient::recvMessage() {
 }
 
 bool SerialClient::sendMessage(const string &message) {
+    cout << message << endl;
 
-    if (write(fd, message.c_str(), message.size()) == message.size()) return true;
+    int len = write(fd, message.c_str(), message.size());
+    if (len == message.size()) {
+        cout << "success write " << len << " bytes" << endl;
+        return true;
+    }
     else {
+        cerr << "write " << len << "/" << message.size() << " bytes" << endl;
         tcflush(fd, TCOFLUSH);
         return false;
     }
